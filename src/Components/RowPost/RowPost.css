@@ -1,0 +1,73 @@
+.row{
+    /* margin-left: 1.6rem; */
+    color: #fff;
+}
+
+.posters{
+    display: flex;
+    /* padding: 0.8rem; */
+    overflow-x: auto;
+    overflow-y:hidden ;
+    /* display: inline-block; */
+    cursor: pointer;
+}
+
+.posters::-webkit-scrollbar{
+    display: none;
+}
+
+.nextPageButton{
+    padding: 0.6rem;
+    margin: 0.6rem;
+    /* border-radius: 1rem; */
+    border-radius: 10px;
+    border: 2px solid rgb(255, 234, 0);
+    background: black;
+    color: white;
+
+}
+
+.pagebuttons{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.nextPageButton:hover{
+    background: rgb(87, 0, 0);
+    border: 2px solid rgb(119, 217, 0);
+    color: white;
+}
+
+.mt-3{
+    margin-top: 4rem;
+}
+
+.poster{
+    max-height: 450px;
+    margin-right: 0.8rem;
+    cursor: pointer;
+}
+
+.poster-small{
+    max-height: 250px;
+    margin-right: 0.8rem;
+    cursor: pointer;
+}
+
+.poster:hover{
+    transform: scale(1.1);
+}
+
+.poster-small:hover{
+    transform: scale(1.1);
+}
+
+.p-custom{
+    padding: 1rem;
+    margin: 1rem;
+}
+
+.pd-1 {
+    padding: 1rem;
+}
