@@ -4,6 +4,9 @@ import logoRed from './mflux-red.png'
 import logoBlue from './mflux-sky.png'
 import defaultAvatar from './avatar-default.png'
 import { MoviePosting } from '../RowPost/RowPost'
+import useResponsive from '../../Hooks/useResponsive';
+import { Button, IconButton, Popover, TextField, Typography } from '@mui/material';
+import Iconify from '../../Hooks/Iconify';
 
 
 
@@ -12,7 +15,24 @@ function NavBar() {
     const [query, doQuery] = useState('')
     const [params, setParams] = useState()
     const [result, setResult] = useState(false)
-    
+    const isMobile = useResponsive('down', 'sm')
+    console.log(isMobile);
+
+    // PopOver Controls //
+    const [anchorEl, setAnchorEl] = useState(null);
+
+    const handleClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
+
+    const open = Boolean(anchorEl);
+    const id = open ? 'simple-popover' : undefined;
+    // Close PopOver Controls //
+
     // const [search, doSearch] = useState(false)
     // useEffect(() => {
     // function DoSearch(value) {
@@ -31,23 +51,45 @@ function NavBar() {
     // }
 
     // }, [result])
+
+    const handleScroll = () => {
+        const recents = document.querySelector('#recents')
+        recents.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    }
+
     return (
         <div>
             <div className="navbar" >
-                <img src={logoRed} alt="" className="logo" />
-                <img onMouseEnter={() => { setToggle(true) }} onMouseLeave={() => { setToggle(false) }} src={defaultAvatar} alt="" className="avatar" />
-                {toggle &&
-                    <div className="popup0">
-                        <h1>User Name</h1>
-                    </div>
-                }
+                <img src={logoRed} alt="" className="logo" onClick={() => window.scroll(0, 0)} />
+                <img onClick={handleScroll} src={defaultAvatar} alt="" className="avatar pointer" />
+
                 <div className="search-box">
-                    {result ? <div>  <h6 onClick={()=>setResult(false)}  className='doSearch-button'>New Search</h6> </div> : <div>
-                        <input className='search' value={query} onChange={(e) => { doQuery(e.target.value) }} type="text" />
-                        <button onClick={() => { setParams(query); setResult(true) }} className='search-button'>Search</button> </div>}
+                    <div>
+                        {isMobile && <> <div>
+                            <IconButton color='warning' variant="contained" onClick={handleClick}>
+                                <Iconify icon='fluent:search-square-24-filled' width={34} height={34} />
+                            </IconButton>
+                            <Popover
+                                id={id}
+                                open={open}
+                                anchorEl={anchorEl}
+                                onClose={handleClose}
+                                anchorOrigin={{
+                                    vertical: 'bottom',
+                                    horizontal: 'left',
+                                }}>
+                                <input className='search' value={query} onChange={(e) => { doQuery(e.target.value) }} type="text" />
+                                <IconButton color='warning' onClick={() => { setParams(query); setResult(true) }} >
+                                    <Iconify icon='fluent:search-square-24-filled' width={34} height={34} /> </IconButton>
+                            </Popover>
+                        </div></>}
+                        {!isMobile && <><input className='search' placeholder='Enter Movie Name' value={query} onChange={(e) => { doQuery(e.target.value) }} type="text" />
+                            <IconButton color='warning' onClick={() => { setParams(query); setResult(true) }} >
+                                <Iconify icon='fluent:search-square-24-filled' width={34} height={34} /> </IconButton> </>}
+                    </div>
                 </div>
             </div>
-            {result ? <MoviePosting data={params} /> : <div></div>}
+            {result ? <MoviePosting data={params} value={setResult} /> : <div></div>}
         </div>
     )
 }

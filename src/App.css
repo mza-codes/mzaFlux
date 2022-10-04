@@ -1,6 +1,12 @@
 *{
     margin:0;
     padding: 0;
+    scroll-behavior: smooth;
+    /* color: aliceblue; */
+}
+
+.white{
+    color: white;
 }
 
 body{
@@ -11,4 +17,43 @@ body{
 
 body::-webkit-scrollbar{
     display: none;
+}
+
+.customCl{
+    /* background-color: ; */
+    color: azure;
+}
+
+.background{
+    position: relative;
+}
+.overlay{
+    position: absolute;
+    top: -42px;
+    right: -10px;
+}
+
+.bord {
+    border: 2px solid white;
+    padding: 1rem;
+    gap: 1rem;
+}
+
+.bg {
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-size: cover;
+    width: 100%;
+    background-position: center;
+    /* height: 38rem; */
+    position: relative;
+    /* color: white; */
+}
+
+.pad {
+    padding-left:0.6rem ;
+}
+
+.pointer {
+    cursor: pointer;
 }

@@ -12,6 +12,7 @@
 }
 
 .logo{
+    cursor: pointer;
     position: fixed;
     left: 1.3em;
     width: 9rem;
@@ -60,23 +61,10 @@
 }
 
 .search{
-    height: 13px;
-    margin: 6px;
+    /* height: 23px; */
+    margin: 3px;
     padding: 8px;
     border-radius: 29px;
-}
-
-
-.popup0 {
-    position: fixed;
-    top: 5.3rem;
-    right: 2.3em;
-    font-size: xx-small;
-    padding: 2em;
-    border: 2px solid white;
-    border-radius: 5px;
-    color: aliceblue;
-
 }
 
 .avatar-small{
