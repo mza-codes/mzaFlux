@@ -8,11 +8,12 @@ import Iconify from '../../Hooks/Iconify'
 import { IconButton } from '@mui/material'
 import { useContext } from 'react'
 import { Data } from '../../App'
+import useResponsive from '../../Hooks/useResponsive'
 
 
 const ytPlayerConfig = {
-    height: '720',
-    width: '100%',
+    height: '360',
+    width: '680',
     playerVars: {
         // https://developers.google.com/youtube/player_parameters
         autoplay: 0,
@@ -22,7 +23,8 @@ function allert() { alert('under Development') }
 function Banner() {
     const [ytId, setYtId] = useState('')
     const [movie, setMovie] = useState()
-    const {data,setData} = useContext(Data)
+    const { data, setData } = useContext(Data)
+    const isMobile = useResponsive('down', 'sm')
     function ytPlay(id) {
         console.log(id)
         axios.get(`${TMDB_URL}/movie/${id}/videos?api_key=${API_KEY}&language=en-US`).then((response) => {
@@ -41,13 +43,12 @@ function Banner() {
         console.log('fetchdata called');
         axios.get(trending).then((response) => {
             let results = response.data.results
-            console.log('LOGGING AFTER LET');
-            console.log(results)
+
             for (let i = 0; i <= results.length; i++) {
                 if (results[i]?.original_title) {
                     console.log('Status OK')
                 } else {
-                    console.log('log from true inside');
+                    console.log('log from change name');
                     if (results[i]?.name) {
                         results[i].original_title = results[i].name
                     } else if (results[i]?.original_name) {
@@ -57,11 +58,9 @@ function Banner() {
             }
             sessionStorage.setItem('trending', JSON.stringify(results))
             let j = Math.floor(Math.random() * results.length);
-            console.log(j);
+
             setMovie(results[j])
-            console.log('RESPONSE -->!! ')
-            console.log(results);
-            console.log('END');
+
         }).catch((err) => {
             console.log(err)
         })
@@ -77,6 +76,7 @@ function Banner() {
             console.log('sessionstorage found', j);
             setMovie(array[j])
         }
+        
     }, [])
 
     const storeData = (data) => {
@@ -86,11 +86,11 @@ function Banner() {
     return (
         <div>
             <div style={{ backgroundImage: `url(${movie ? POSTER_URL + movie.backdrop_path : ""})` }}
-                className='banner'>
+                className='banner background'>
                 <div className='content ' >
                     <h1 className='title'> {movie ? movie.original_title : "The Originals"} </h1>
                     <div className='banner_buttons' >
-                        <button onClick={() => { ytPlay(movie && movie.id);storeData(movie) }} className='button' >Play</button>
+                        <button onClick={() => { ytPlay(movie && movie.id); storeData(movie) }} className='button' >Play</button>
                         <button onClick={allert} className='button' >My list</button>
                     </div>
 
@@ -98,9 +98,12 @@ function Banner() {
                         <h1 className='description banner-data'> {movie ? movie.overview : "The Originals is a popular Movie released in 2019, telling the ..."} </h1>
                     </div>
                 </div>
+                <div className='overlayBanner'>
+                    {ytId && !isMobile && <YouTube opts={ytPlayerConfig} videoId={ytId.key} />}
+                </div>
                 <div className="fade_bottom"></div>
             </div>
-            {ytId && <div className='pd-1'>
+            {ytId && isMobile && <div className='pd-1'>
                 <h1 className='pd-1' style={{ color: '#fff', textAlign: 'center' }}>Watch Trailer
                     <IconButton color='error' onClick={() => { setYtId(null) }}>
                         <Iconify icon='eva:close-square-fill' width={35} height={35} />

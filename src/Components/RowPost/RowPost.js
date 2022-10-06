@@ -26,8 +26,8 @@ const styles = {
 }
 function MoviePost(props) {
     // var data = []
-    const [recent,setRecent] = useState([])
-    console.log('logging recent empty ARRAY',recent)
+    const [recent, setRecent] = useState([])
+    console.log('logging recent empty ARRAY', recent)
     const [search, setSearch] = useState(false)
     const [searchItems, setResult] = useState([])
     const [ytId, setYtId] = useState('')
@@ -36,20 +36,22 @@ function MoviePost(props) {
     const isMobile = useResponsive('down', 'sm')
     const isMd = useResponsive('down', 'md')
     const isDesktop = useResponsive('up', 'lg')
-    const {setData} = useContext(Data)
-    console.log(isMobile, 'ismobile', isMd, 'isMd', isDesktop, 'isDesktop');
+    const { setData } = useContext(Data)
+    let query = 'thriller'
     const runSearch = () => {
+
         console.log('fnc MOVIE POST LOGging PROPS')
         console.log(props);
         // --------------- TMDB REQUEST -----------------------
         // ${TMDB_URL}/search/movie?api_key=${API_KEY}&language=en-US&query=${props.data}&page=1&include_adult=false
-        axios.get(`${TMDB_URL}/search/movie?api_key=${API_KEY}&language=en-US&query=${props.data}`).then((response) => {
-            console.log(response.data.results)
-            console.log(response.data)
-            setResult(response.data)
-            // sessionStorage.setItem('searchResult', JSON.stringify(response.data))
-            setSearch(true)
-        }).catch((err) => console.log(err))
+        axios.get(`${TMDB_URL}/search/movie?api_key=${API_KEY}&language=en-US&query=${props.data ? props.data : query}`)
+            .then((response) => {
+                console.log(response.data.results)
+                console.log(response.data)
+                setResult(response.data)
+                // sessionStorage.setItem('searchResult', JSON.stringify(response.data))
+                setSearch(true)
+            }).catch((err) => console.log(err))
         // --------------- TMDB REQUEST END---------------------
         // --------------- IMDB REQUEST -------------------
         // const options = {
@@ -77,7 +79,7 @@ function MoviePost(props) {
         console.log('handleStore called')
         setRecent(current => [...current, data])
         setData(current => [...current, data])
-    } 
+    }
 
     useEffect(() => {
         if (isMobile) {
@@ -149,16 +151,22 @@ function MoviePost(props) {
                         {searchItems.results.map((data) => {
                             // if (props.curl) {
                             return (
-                                <div key={data.id}>
-                                    <img onClick={() => { trailerHandler(data.id);handleStore(data) }} className={props.small ? 'poster-small'
+                                <div key={data.id} className='background'>
+                                    <div className='overlayPoster'>
+                                        <Tooltip title='Add to Wishlist'>
+                                            <IconButton>
+                                                <Iconify sx={{ color: 'white' }} icon='emojione:star' width={26} height={26} />
+                                            </IconButton>
+                                        </Tooltip></div>
+                                    <img onClick={() => { trailerHandler(data.id); handleStore(data) }} className={props.small ? 'poster-small'
                                         : 'poster'} src={defImage} alt={data.original_title}
                                         srcSet={`${data.poster_path ? w500 + data.poster_path : w500 + data.backdrop_path}`} />
                                     <h6 href={`https://imdb.com/title/tt${data.id}`}>{data.original_title} </h6>
                                 </div>
                             )
                         })}
-                        {searchItems.more ? <div> <img src={defImage} onClick={() => getMore(searchItems.page + 1)} alt="More" 
-                        className="poster" /><h6 >More Results </h6> </div> : <div></div>}
+                        {searchItems.more ? <div> <img src={defImage} onClick={() => getMore(searchItems.page + 1)} alt="More"
+                            className="poster" /><h6 >More Results </h6> </div> : <div></div>}
                     </div>
                     <div className='pagebuttons'>
                         {searchItems.more ? <div>
@@ -193,10 +201,10 @@ function MoviePost(props) {
 function RowPost(props) {
     const [items, setItem] = useState([])
     const [ytId, setYtId] = useState('')
-    const [recent,setRecent] = useState([])
-    const {data,setData} = useContext(Data)
+    const [recent, setRecent] = useState([])
+    const { data, setData } = useContext(Data)
 
-    const handleStore =  (data) => {
+    const handleStore = (data) => {
         console.log('HANDLESTORE CALLED')
         setRecent(current => [...current, data])
         setData(current => [...current, data])
@@ -263,15 +271,25 @@ function RowPost(props) {
                     if (props.curl) {
                         return (
                             <div key={data.id}>
-                                <img key={data.id} onClick={() => { trailerHandler(data.id);handleStore(data) }} className={props.small ? 'poster-small'
-                                    : 'poster'} src={defImage} alt={data.title} srcSet={`${data.image.url ? data.image.url : defImage}`} />
+                                <img key={data.id} onClick={() => { trailerHandler(data.id); handleStore(data) }}
+                                    className={props.small ? 'poster-small'
+                                        : 'poster'} src={defImage} alt={data.title}
+                                    srcSet={`${data.image.url ? data.image.url : defImage}`} />
                             </div>
                         )
                     } else {
                         return (
-                            <div key={data.id}>
-                                <img key={data.id} onClick={() => { trailerHandler(data.id);handleStore(data) }} className={props.small ? 'poster-small'
-                                    : 'poster'} src={defImage} alt={data.original_name}
+                            <div key={data.id} className='background'>
+                                {/* iconoir:favourite-book */}
+                                <div className='overlayPoster'>
+                                    <Tooltip title='Add to Wishlist'>
+                                        <IconButton>
+                                            <Iconify sx={{ color: 'white' }} icon='emojione:star' width={26} height={26} />
+                                        </IconButton>
+                                    </Tooltip></div>
+                                <img key={data.id} onClick={() => { trailerHandler(data.id); handleStore(data) }}
+                                    className={props.small ? 'poster-small'
+                                        : 'poster'} src={defImage} alt={data.original_name}
                                     srcSet={`${data.poster_path ? w500 + data.poster_path : defImage}`} />
                             </div>
                         )
