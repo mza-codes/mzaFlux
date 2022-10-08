@@ -10,6 +10,8 @@ import Iconify from '../../Hooks/Iconify';
 import useResponsive from '../../Hooks/useResponsive';
 import { useContext } from 'react';
 import { Data } from '../../App';
+import { useNavigate } from 'react-router-dom';
+import SingleView from '../../Pages/SingleView';
 // alt={data.original_title}
 
 
@@ -26,6 +28,7 @@ const styles = {
 }
 function MoviePost(props) {
     // var data = []
+    const route = useNavigate()
     const [recent, setRecent] = useState([])
     console.log('logging recent empty ARRAY', recent)
     const [search, setSearch] = useState(false)
@@ -158,8 +161,8 @@ function MoviePost(props) {
                                                 <Iconify sx={{ color: 'white' }} icon='emojione:star' width={26} height={26} />
                                             </IconButton>
                                         </Tooltip></div>
-                                    <img onClick={() => { trailerHandler(data.id); handleStore(data) }} className={props.small ? 'poster-small'
-                                        : 'poster'} src={defImage} alt={data.original_title}
+                                    <img onClick={() => { trailerHandler(data.id); handleStore(data);}} 
+                                    className={props.small ? 'poster-small' : 'poster'} src={defImage} alt={data.original_title}
                                         srcSet={`${data.poster_path ? w500 + data.poster_path : w500 + data.backdrop_path}`} />
                                     <h6 href={`https://imdb.com/title/tt${data.id}`}>{data.original_title} </h6>
                                 </div>
@@ -183,10 +186,11 @@ function MoviePost(props) {
                         </div> : <div></div>}
                     </div>
                 </div>
-                {ytId && <div className='background'> <div className="overlay">
+                {ytId && <SingleView />}
+                {/* {ytId && <div className='background'> <div className="overlay">
                     <IconButton color='error' onClick={() => setYtId(null)}>
                         <Iconify icon='eva:close-square-fill' width={35} height={35} />
-                    </IconButton></div> <YouTube opts={ytPlayerConfig} videoId={ytId.key} /> </div>}
+                    </IconButton></div> <YouTube opts={ytPlayerConfig} videoId={ytId.key} /> </div>} */}
             </div>
         )
     } else {
@@ -203,7 +207,7 @@ function RowPost(props) {
     const [ytId, setYtId] = useState('')
     const [recent, setRecent] = useState([])
     const { data, setData } = useContext(Data)
-
+    const route = useNavigate()
     const handleStore = (data) => {
         console.log('HANDLESTORE CALLED')
         setRecent(current => [...current, data])
@@ -242,6 +246,8 @@ function RowPost(props) {
     };
     const trailerHandler = (id) => {
         console.log(id)
+        route('/view')
+        return ;
         axios.get(`${TMDB_URL}/movie/${id}/videos?api_key=${API_KEY}&language=en-US`).then((response) => {
             console.log(response)
             if (response.data.results.length !== 0) {
@@ -271,7 +277,7 @@ function RowPost(props) {
                     if (props.curl) {
                         return (
                             <div key={data.id}>
-                                <img key={data.id} onClick={() => { trailerHandler(data.id); handleStore(data) }}
+                                <img key={data.id} onClick={() => { trailerHandler(data.id); handleStore(data); }}
                                     className={props.small ? 'poster-small'
                                         : 'poster'} src={defImage} alt={data.title}
                                     srcSet={`${data.image.url ? data.image.url : defImage}`} />

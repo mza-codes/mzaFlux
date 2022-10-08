@@ -7,6 +7,7 @@ import { BrowserRouter as Router, Route } from 'react-router-dom'
 import { action, tvPopular, comedy, documentaries, horror, popular, trending, imdbPopularUS, popularIndian, adventure } from './url'
 import Recent from './Components/Recent'
 import WishList from './Components/Wishlist'
+import HomeNavBar from './Components/NavBar/HomeNavBar'
 
 export function Breaker() {
   return (
@@ -20,14 +21,11 @@ export const Data = createContext(null)
 export const UserSession = createContext(null)
 function App() {
   const [user, setUser] = useState(null)
-  const [data, setData] = useState([])
-  console.log('LOGGING DATA APP.JS MAIN', data, 'userNext', user);
-
+  
   const fetchUser = () => {
     const data = sessionStorage.getItem('userSession')
     if (data != null) {
       let user = JSON.parse(data)
-      console.log(user);
       setUser(user)
     }
   }
@@ -38,9 +36,9 @@ function App() {
 
   return (
     <UserSession.Provider value={{ user, setUser }} >
-      <Data.Provider value={{ data, setData }} >
+      {/* <Data.Provider value={{ data, setData }} > */}
         <div>
-          <NavBar />
+          <HomeNavBar />
           <Banner />
           <RowPost url={trending} title="Trending Movies" />
           <RowPost url={tvPopular} title="Trending TV Shows" small />
@@ -50,10 +48,10 @@ function App() {
           <RowPost url={horror} title="Horror Movies" small />
           <RowPost url={documentaries} title="Documentaries" small />
           <Breaker />
-          <Recent value={[data, setData]} />
-          <WishList />
+          {/* <Recent value={[data, setData]} /> */}
+          {/* <WishList /> */}
         </div>
-      </Data.Provider>
+      {/* </Data.Provider> */}
     </UserSession.Provider>
   );
 }

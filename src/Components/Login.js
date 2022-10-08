@@ -18,7 +18,7 @@ import axios from 'axios';
 import { UserSession } from '../App';
 import { BACKEND_URL } from '../Constants/Constants';
 
-export default function SignUp({ value }) {
+export default function Login({ value }) {
     const [complete, setComplete] = useState(false)
     const [updated, setUpdated] = useState(false)
     const [err, setErr] = useState('')
@@ -32,23 +32,18 @@ export default function SignUp({ value }) {
     }
 
     const profileSchema = Yup.object().shape({
-        name: Yup.string().min(5, 'Username too short').max(15, 'Username character exceeds')
-            .required('Required Field').lowercase('Must be Lowercase'),
         email: Yup.string().email('Email must be a valid email address').required('Required Field').lowercase('Must be Lowercase'),
         password: Yup.string().min(6, 'Minimum 6 Characters Required').max(15, 'Max 12 Characters').required('Required Field')
             .required('Required Field'),
-        country: Yup.string().min(3, 'Must be a minimum of 3 Characters').max(10, 'Must not exceed 10 Characters')
-            .required('Required Field'),
-        age: Yup.string().min(2, 'Age not Valid').max(2, 'Age not Valid').required('Required Field'),
     })
 
     // useEffect(() => {
     //   console.log('useEff cld hr');
     // }, [])
-    const handleUpdate = async (values, actions) => {
+    const handleLogin = async (values, actions) => {
         console.log('Updating User Data')
         console.log(values)
-        await axios.post(`${BACKEND_URL}/register`, values)
+        await axios.post(`${BACKEND_URL}/login`, values)
             .then((response) => {
                 console.log('FETCHED RESPONSE :', response);
                 console.log('USER sTATUS :', response.data);
@@ -73,8 +68,8 @@ export default function SignUp({ value }) {
 
     }
     return (
-        <div>
-            <Dialog open={open}>
+        <div >
+            <Dialog open={open} >
                 <div className="dialogBox">
                     <DialogActions className='bg-Dialog'>
                         <IconButton
@@ -86,35 +81,31 @@ export default function SignUp({ value }) {
                             <Grid container item xs={12} direction='column' justifyContent='center' textAlign='center'
                                 alignContent='center' alignItems='center' gap={1}>
                                 <Grid item xs={12}>
-                                    <p className="voga">Sign Up</p>
+                                    <p className="voga">LogIn</p>
                                 </Grid>
 
                                 {/* FORM Content */}
 
-                                <Formik initialValues={{
-                                    name: '', email: '', password: '', country: '', age: ''
-                                }}
-                                    validationSchema={profileSchema} onSubmit={handleUpdate} >
+                                <Formik initialValues={{ email: '', password: '' }}
+                                    validationSchema={profileSchema} onSubmit={handleLogin} >
                                     {props => (
-                                        <Form spellCheck >
+                                        <Form spellCheck autoCapitalize='true' autoComplete='false'>
                                             {/* {console.log(props)} */}
-                                            <Grid container item direction='row' textAlign='center' justifyContent='center' gap={2} >
-                                                <CustomInput label='User Name' name='name' type='text'
-                                                    variant="outlined" id="outlined-name" />
+                                            <Grid container item direction='column' textAlign='center' justifyContent='center' gap={2}
+                                                sx={{ width: { xs: 'auto', md: 360 } }} >
+
                                                 <CustomInput label='E Mail' name='email' type='email'
                                                     variant="outlined" id="outlined-email" />
                                                 <CustomInput label='Password' name='password' type='password'
                                                     variant="outlined" id="outlined-password" />
-                                                <CustomInput label='Country' name='country' type='text' fullWidth
-                                                    variant="outlined" id="outlined-country" />
-                                                <CustomInput label='Age' name='age' type='number' fullWidth
-                                                    variant="outlined" id="outlined-alt" />
+
                                                 <Grid container item direction='column' alignItems='center' xs={12}
                                                     textAlign='center' justifyContent='center'>
                                                     {!complete && <LoadingButton sx={{ mb: 2 }} variant='contained'
                                                         type='submit' color={props.isValid ? 'success' : 'error'}
-                                                        loading={props.isSubmitting} > <Iconify width={46} height={36}
-                                                            icon='fluent:save-arrow-right-24-filled' /> </LoadingButton>}
+                                                        loading={props.isSubmitting} > <Iconify width={46} height={30}
+                                                            icon='material-symbols:send-rounded' />
+                                                    </LoadingButton>}
                                                     <h5 className='errorText'>{err}</h5>
                                                     <IconButton
                                                         onClick={props.handleReset}

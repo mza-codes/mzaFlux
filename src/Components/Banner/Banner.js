@@ -9,6 +9,7 @@ import { IconButton } from '@mui/material'
 import { useContext } from 'react'
 import { Data } from '../../App'
 import useResponsive from '../../Hooks/useResponsive'
+import { useNavigate } from 'react-router-dom'
 
 
 const ytPlayerConfig = {
@@ -19,8 +20,8 @@ const ytPlayerConfig = {
         autoplay: 0,
     },
 };
-function allert() { alert('under Development') }
 function Banner() {
+    const route = useNavigate()
     const [ytId, setYtId] = useState('')
     const [movie, setMovie] = useState()
     const { data, setData } = useContext(Data)
@@ -76,7 +77,7 @@ function Banner() {
             console.log('sessionstorage found', j);
             setMovie(array[j])
         }
-        
+
     }, [])
 
     const storeData = (data) => {
@@ -91,7 +92,7 @@ function Banner() {
                     <h1 className='title'> {movie ? movie.original_title : "The Originals"} </h1>
                     <div className='banner_buttons' >
                         <button onClick={() => { ytPlay(movie && movie.id); storeData(movie) }} className='button' >Play</button>
-                        <button onClick={allert} className='button' >My list</button>
+                        <button onClick={() => route('/wishlist')} className='button' >My List</button>
                     </div>
 
                     <div className='description'>

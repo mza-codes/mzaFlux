@@ -1,46 +1,66 @@
-*{
-    margin:0;
+* {
+    margin: 0;
     padding: 0;
     scroll-behavior: smooth;
     /* color: aliceblue; */
 }
 
-.white{
+.white {
     color: white;
 }
 
-body{
+body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     background-color: #111;
+    /* background-color: rgb(180, 19, 19); */
     scroll-behavior: smooth;
 }
 
-body::-webkit-scrollbar{
+body::-webkit-scrollbar {
     display: none;
 }
 
-.font{
+.font {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
-.customCl{
+.customCl {
     /* background-color: ; */
     color: azure;
 }
 
-.background{
+.background {
     position: relative;
 }
-.overlay{
+
+.overlay {
     position: absolute;
     top: -42px;
     right: -10px;
 }
 
-.overlayBanner{
+.overlayBanner {
     position: absolute;
     bottom: 0;
     right: 0;
+}
+
+.overlayProfile{
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.roboImg{
+    max-width: 130px;
+    max-height: 130px;
+    margin: 10px;
+    /* padding: 5px; */
+}
+
+.roboImg:hover{
+    scale: 1.2;
+    cursor: pointer;
 }
 
 .overlayPoster {
@@ -49,10 +69,16 @@ body::-webkit-scrollbar{
     right: 10px;
 }
 
+.dialogBox{
+    /* background-color:  #fff9f5; */
+    background: radial-gradient(rgb(255, 255, 191),rgb(194, 194, 194));
+}
+
 .bord {
-    border: 2px solid white;
-    padding: 1rem;
-    gap: 1rem;
+    border: 2px solid rgb(255, 255, 255);
+    border-radius: 30px;
+    margin: 10px;
+    padding: 10px;
 }
 
 .bg {
@@ -60,6 +86,7 @@ body::-webkit-scrollbar{
     background-repeat: no-repeat;
     background-size: cover;
     width: 100%;
+    height: 100vh;
     background-position: center;
     /* height: 38rem; */
     position: relative;
@@ -67,7 +94,7 @@ body::-webkit-scrollbar{
 }
 
 .pad {
-    padding-left:0.6rem ;
+    padding-left: 0.6rem;
 }
 
 .pointer {
@@ -80,11 +107,49 @@ body::-webkit-scrollbar{
     justify-content: space-around;
 }
 
-.bg-Dialog {
+/* .bg-Dialog {
+    
+} */
 
+.voga {
+    font-family: 'voga';
+    font-weight: 300;
+    font-size: xx-large;
 }
 
-.errorText{
+.vogaSmall{
+    font-family: 'voga';
+    font-weight: 300;
+    font-size: medium;
+}
+
+.gloriusSmall{
+    font-family: 'glorious';
+    font-weight: 300;
+    font-size: medium;
+}
+
+.glorius {
+    font-family: 'glorious';
+    font-weight: 300;
+    font-size: xx-large;
+}
+
+@font-face {
+    font-family: 'glorious';
+    src: url('/public/fonts/GLORIOUS.otf');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'voga';
+    src: url('/public/fonts/Wallington-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+.errorText {
     color: red;
     font-weight: 400;
 }

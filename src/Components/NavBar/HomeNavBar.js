@@ -15,7 +15,7 @@ import Login from '../Login';
 
 
 
-function NavBar() {
+function HomeNavBar() {
     const [toggle, setToggle] = useState(false)
     const [query, doQuery] = useState('')
     const [params, setParams] = useState()
@@ -48,6 +48,7 @@ function NavBar() {
     }
 
     const nav = () => {
+        console.log(window.location);
         if (window.location.pathname === "/") {
             window.scroll(0, 0)
         } else {
@@ -56,13 +57,12 @@ function NavBar() {
     }
 
     return (
-        <div style={{ marginBottom: '6rem' }}>
+        <div >
             <div className="navbar" >
                 <img src={logoRed} alt="" className="logo" onClick={nav} />
-
                 {/* <img onClick={(e)=> setAnchorEl2(e.currentTarget)} src={logoBlue} alt="" className="logo pointer" /> */}
-                <img onClick={(e) => setAnchorEl2(e.currentTarget)} alt="" className="avatar pointer"
-                    src={user && user.photoURL ? user.photoURL : defaultAvatar} >
+                <img onClick={(e) => setAnchorEl2(e.currentTarget)} alt="" className="avatar pointer" 
+                src={user && user.photoURL ? user.photoURL : defaultAvatar} >
                 </img><BasicPopover value={[anchorEl2, setAnchorEl2, setOpenPopover, setLoginPopOver]} />
 
                 {!user && <SignUp value={[openPopover, setOpenPopover]} />}
@@ -94,9 +94,9 @@ function NavBar() {
                     </div>
                 </div>
             </div>
-            {result && <MoviePosting data={params} value={setResult} /> }
+            {result ? <MoviePosting data={params} value={setResult} /> : <div></div>}
         </div>
     )
 }
 // export const getResult = searchResult
-export default NavBar
+export default HomeNavBar;

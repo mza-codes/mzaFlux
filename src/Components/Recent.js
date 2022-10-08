@@ -1,14 +1,16 @@
 import { Container, Divider, Grid, IconButton, Typography } from "@mui/material";
 import { useEffect } from "react";
 import { useState } from "react";
-import { Breaker } from "../App";
+import { Breaker, Data } from "../App";
 import { POSTER_URL, w500 } from "../Constants/Constants";
 import * as _ from "lodash";
 import './Banner/Banner.css'
 import Iconify from "../Hooks/Iconify";
+import { useContext } from "react";
+import NavBar from "./NavBar/NavBar";
 
-export default function Recent({ value }) {
-    const [data, setData] = value
+export default function Recent() {
+    const { data, setData } = useContext(Data)
     const [err, setErr] = useState('')
     const [showErr, setShowErr] = useState(false)
     console.log(data);
@@ -34,15 +36,18 @@ export default function Recent({ value }) {
 
     return (
         <>
+            <NavBar />
             <Grid className="white" my={2} container item direction='row' alignItems='flex-start' justifyContent='center'
                 textAlign='start' gap={1} >
-                <Grid item xs={12} id='recents' >
-                    <Typography variant="h5" textAlign='center' gutterBottom> RECENT ACTIVITY </Typography>
-                   <Typography variant="h6" textAlign='center' gutterBottom> You have viewed these recently ! </Typography>
-                    <IconButton color='primary' onClick={sort} > <Iconify icon='bx:sort' width={34} height={34} /> </IconButton>
+                <Grid item xs={12} id='recents' textAlign='center' >
+                    <h1 className="glorius">Recent Activity</h1>
+                    {data.length != 0 ? <> <Typography variant="subtitle2" color='green' gutterBottom>
+                        You have viewed these recently ! </Typography>
+                        <IconButton color='primary' onClick={sort} > <Iconify icon='bx:sort' width={34} height={34} /> </IconButton>
+                    </> : <> <p className="glorius" style={{color:'red',paddingTop:'10px'}} >There's Nothing to Show Here !</p> </> }
                     {showErr && <Typography color='error' textAlign='center' variant="overline" gutterBottom> {err} </Typography>}
                 </Grid>
-                {data.map((movie,index) => {
+                {data.map((movie, index) => {
                     return (
                         <div key={movie.id} className="bg"
                             style={{ backgroundImage: `url(${movie ? POSTER_URL + movie.backdrop_path : ""})` }}>
