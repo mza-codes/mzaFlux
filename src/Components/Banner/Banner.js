@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import './Banner.css'
 import { API_KEY, TMDB_URL, IMAGE_URL, POSTER_URL } from '../../Constants/Constants'
-import { trending } from '../../url'
+import { originals, trending } from '../../url'
 import axios from 'axios'
 import YouTube from 'react-youtube'
 import Iconify from '../../Hooks/Iconify'
@@ -42,9 +42,9 @@ function Banner() {
 
     const fetchData = () => {
         console.log('fetchdata called');
-        axios.get(trending).then((response) => {
-            let results = response.data.results
 
+        axios.get(originals).then((response) => {
+            let results = response.data.results
             for (let i = 0; i <= results.length; i++) {
                 if (results[i]?.original_title) {
                     console.log('Status OK')
@@ -69,7 +69,7 @@ function Banner() {
 
     useEffect(() => {
         const data = sessionStorage.getItem('trending')
-        if (data === null) {
+        if (data === null || undefined) {
             fetchData()
         } else {
             const array = JSON.parse(data)
@@ -80,8 +80,19 @@ function Banner() {
 
     }, [])
 
-    const storeData = (data) => {
-        setData(current => [...current, data])
+    const storeData = async (value) => {
+        console.log('HANDLESTORE CALLED')
+        if (data.length != 0) {
+            const stat = await data.filter(item => item.id == value.id)
+            console.log('STAT MAIN', stat);
+            if (stat.length === 0) {
+                setData(current => [...current, value])
+            } else {
+                return false;
+            }
+        } else {
+            setData(current => [...current, value])
+        }
     }
 
     return (

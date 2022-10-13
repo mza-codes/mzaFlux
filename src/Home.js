@@ -6,18 +6,32 @@ import Router from "./router";
 
 export default function Home() {
     const [data, setData] = useState([])
-    console.log('DATA logging',data);
+    console.log('DATA logging', data);
     const fetchUser = () => {
         const data = JSON.parse(sessionStorage.getItem('userSession'))
         console.log(data)
     }
+    sessionStorage.setItem('recents', JSON.stringify(data))
+    function fetchRecents() {
+        const values = JSON.parse(sessionStorage.getItem('recents'))
+        setData(values)
+    }
+
+    const block = () => {
+    }
 
     useEffect(() => {
+        fetchRecents()
         fetchUser()
+        window.onbeforeunload = () => {
+            sessionStorage.setItem('recents', JSON.stringify(data))
+            return "Your Session Will be Lost";
+        };
     }, [])
 
     return (
-        <Data.Provider value={{data,setData}} >
+        <Data.Provider value={{ data, setData }} >
+
             <BrowserRouter>
                 <Router >
                     <div className="App">

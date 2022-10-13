@@ -8,20 +8,17 @@ import './Banner/Banner.css'
 import Iconify from "../Hooks/Iconify";
 import { useContext } from "react";
 import NavBar from "./NavBar/NavBar";
+import useResponsive from "../Hooks/useResponsive";
 
 export default function Recent() {
     const { data, setData } = useContext(Data)
     const [err, setErr] = useState('')
     const [showErr, setShowErr] = useState(false)
     console.log(data);
-
+    const isMobile = useResponsive('down', 'sm')
     const sort = () => {
         let sorted = _.sortBy(data).reverse()
         setData(sorted)
-        setTimeout(() => {
-            let sorted = _.sortBy(data).reverse()
-            setData(sorted)
-        }, 7400);
     }
 
     useEffect(() => {
@@ -44,15 +41,16 @@ export default function Recent() {
                     {data.length != 0 ? <> <Typography variant="subtitle2" color='green' gutterBottom>
                         You have viewed these recently ! </Typography>
                         <IconButton color='primary' onClick={sort} > <Iconify icon='bx:sort' width={34} height={34} /> </IconButton>
-                    </> : <> <p className="glorius" style={{color:'red',paddingTop:'10px'}} >There's Nothing to Show Here !</p> </> }
+                    </> : <> <p className="glorius" style={{ color: 'red', paddingTop: '10px' }} >There's Nothing to Show Here !</p> </>}
                     {showErr && <Typography color='error' textAlign='center' variant="overline" gutterBottom> {err} </Typography>}
                 </Grid>
                 {data.map((movie, index) => {
                     return (
                         <div key={movie.id} className="bg"
                             style={{ backgroundImage: `url(${movie ? POSTER_URL + movie.backdrop_path : ""})` }}>
-                            <Grid key={index} item xs={12} maxWidth='xl'>
-                                <img style={{ marginTop: '0.3rem' }} src={w500 + movie.poster_path} alt={movie.name} />
+                            <Grid item xs={12} maxWidth='xl'>
+                                { <img style={{ marginTop: '0.1rem' }} className='singlePoster'
+                                    src={w500 + movie.poster_path} alt={movie.name} />}
                                 <div className="description banner-data pad" >
                                     <h4>{movie.name}</h4>
                                     <h4>{movie.original_title}</h4>

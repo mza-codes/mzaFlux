@@ -5,7 +5,7 @@ import logoBlue from './mflux-sky.png'
 import defaultAvatar from './avatar-default.png'
 import { MoviePosting } from '../RowPost/RowPost'
 import useResponsive from '../../Hooks/useResponsive';
-import { Button, IconButton, Popover, TextField, Typography } from '@mui/material';
+import { Box, Button, IconButton, Popover, TextField, Typography } from '@mui/material';
 import Iconify from '../../Hooks/Iconify';
 import BasicPopover from '../Popover';
 import SignUp from '../Register';
@@ -59,10 +59,16 @@ function HomeNavBar() {
     return (
         <div >
             <div className="navbar" >
-                <img src={logoRed} alt="" className="logo" onClick={nav} />
+                {/* <img src={logoRed} alt="" className="logo" onClick={nav} /> */}
+                <Box className='pointer' onClick={nav} component="img"
+                    sx={{
+                        height: { xs: '2rem', sm: '2.5rem', lg: '3rem', xl: '3.5rem' },
+                        width: { xs: '5rem', sm: '7rem', lg: '9rem', xl: '10rem' }
+                    }}
+                    alt="mFlux_Logo" src={logoRed} />
                 {/* <img onClick={(e)=> setAnchorEl2(e.currentTarget)} src={logoBlue} alt="" className="logo pointer" /> */}
-                <img onClick={(e) => setAnchorEl2(e.currentTarget)} alt="" className="avatar pointer" 
-                src={user && user.photoURL ? user.photoURL : defaultAvatar} >
+                <img onClick={(e) => setAnchorEl2(e.currentTarget)} alt="" className="avatar pointer"
+                    src={user && user.photoURL ? user.photoURL : defaultAvatar} >
                 </img><BasicPopover value={[anchorEl2, setAnchorEl2, setOpenPopover, setLoginPopOver]} />
 
                 {!user && <SignUp value={[openPopover, setOpenPopover]} />}

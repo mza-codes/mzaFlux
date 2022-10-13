@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import './RowPost.css'
 import axios from 'axios'
 import defImage from './default-poster.jpg';
@@ -12,6 +12,8 @@ import { useContext } from 'react';
 import { Data } from '../../App';
 import { useNavigate } from 'react-router-dom';
 import SingleView from '../../Pages/SingleView';
+import lozad from 'lozad'
+import * as _ from 'loadsh'
 // alt={data.original_title}
 
 
@@ -39,7 +41,7 @@ function MoviePost(props) {
     const isMobile = useResponsive('down', 'sm')
     const isMd = useResponsive('down', 'md')
     const isDesktop = useResponsive('up', 'lg')
-    const { setData } = useContext(Data)
+    const { data, setData } = useContext(Data)
     let query = 'thriller'
     const runSearch = () => {
 
@@ -78,10 +80,20 @@ function MoviePost(props) {
         // ---------------- IMDB REQUEST END------------------
     }
 
-    const handleStore = (data) => {
-        console.log('handleStore called')
-        setRecent(current => [...current, data])
-        setData(current => [...current, data])
+    const handleStore = async (value) => {
+        console.log('handleStore REsult CALLED')
+        if (data.length != 0) {
+            const stat = await data.filter(item => item.id == value.id)
+            console.log('STAT MAIN', stat);
+            if (stat.length === 0) {
+                setData(current => [...current, value])
+            } else {
+                return false;
+            }
+        } else {
+            setData(current => [...current, value])
+        }
+
     }
 
     useEffect(() => {
@@ -154,15 +166,16 @@ function MoviePost(props) {
                         {searchItems.results.map((data) => {
                             // if (props.curl) {
                             return (
-                                <div key={data.id} className='background'>
+                                <div key={data.id} className='background poster-card'>
                                     <div className='overlayPoster'>
                                         <Tooltip title='Add to Wishlist'>
                                             <IconButton>
                                                 <Iconify sx={{ color: 'white' }} icon='emojione:star' width={26} height={26} />
                                             </IconButton>
                                         </Tooltip></div>
-                                    <img onClick={() => { trailerHandler(data.id); handleStore(data);}} 
-                                    className={props.small ? 'poster-small' : 'poster'} src={defImage} alt={data.original_title}
+                                    <img onClick={() => { trailerHandler(data.id); handleStore(data); }}
+                                        className={props.small ? 'poster-small poster-card' : 'poster poster-card'}
+                                        src={defImage} alt={data.original_title}
                                         srcSet={`${data.poster_path ? w500 + data.poster_path : w500 + data.backdrop_path}`} />
                                     <h6 href={`https://imdb.com/title/tt${data.id}`}>{data.original_title} </h6>
                                 </div>
@@ -205,13 +218,23 @@ function MoviePost(props) {
 function RowPost(props) {
     const [items, setItem] = useState([])
     const [ytId, setYtId] = useState('')
-    const [recent, setRecent] = useState([])
     const { data, setData } = useContext(Data)
+    const elRef = useRef();
     const route = useNavigate()
-    const handleStore = (data) => {
+    const handleStore = async (value) => {
         console.log('HANDLESTORE CALLED')
-        setRecent(current => [...current, data])
-        setData(current => [...current, data])
+        if (data.length != 0) {
+            const stat = await data.filter(item => item.id == value.id)
+            console.log('STAT MAIN', stat);
+            if (stat.length === 0) {
+                setData(current => [...current, value])
+            } else {
+                return false;
+            }
+        } else {
+            setData(current => [...current, value])
+        }
+
     }
 
     const fetchRow = () => {
@@ -232,60 +255,74 @@ function RowPost(props) {
 
     useEffect(() => {
         fetchRow()
+        const imgs = document.querySelector('img');
+        const observer = lozad(imgs); 
+        // passing a `NodeList` (e.g. `document.querySelectorAll()`) is also valid
+        observer.observe();
     }, [])
-    const ytPlayerConfig = {
-        // height: '1080',
-        // width: '100%',
-        height: '800',
-        width: '100%',
 
-        playerVars: {
-            // https://developers.google.com/youtube/player_parameters
-            autoplay: 0,
-        },
-    };
     const trailerHandler = (id) => {
         console.log(id)
         route('/view')
-        return ;
-        axios.get(`${TMDB_URL}/movie/${id}/videos?api_key=${API_KEY}&language=en-US`).then((response) => {
-            console.log(response)
-            if (response.data.results.length !== 0) {
-                let j = Math.floor(Math.random() * response.data.results.length);
-                console.log('printing j', j)
-                setYtId(response.data.results[j])
-                console.log(response.data.results[j])
-            } else {
-                alert('404 Not Found')
-            }
-        }).catch((err) => {
-            alert('Error Fetching Data')
-        })
+        return;
+        // axios.get(`${TMDB_URL}/movie/${id}/videos?api_key=${API_KEY}&language=en-US`).then((response) => {
+        //     console.log(response)
+        //     if (response.data.results.length !== 0) {
+        //         let j = Math.floor(Math.random() * response.data.results.length);
+        //         console.log('printing j', j)
+        //         setYtId(response.data.results[j])
+        //         console.log(response.data.results[j])
+        //     } else {
+        //         alert('404 Not Found')
+        //     }
+        // }).catch((err) => {
+        //     alert('Error Fetching Data')
+        // })
     }
 
+    const sort = () => {
+        let sorted = _.sortBy(items).reverse()
+        setItem(sorted)
+    }
+
+
+    const scrollHoriz = () => {
+        const el = elRef.current;
+        if (el) {
+            const onWheel = e => {
+                if (e.deltaY == 0) return;
+                e.preventDefault();
+                el.scrollTo({
+                    left: el.scrollLeft + e.deltaY,
+                    behavior: "smooth"
+                });
+            };
+            el.addEventListener("wheel", onWheel);
+            return () => el.removeEventListener("wheel", onWheel);
+        }
+    }
+
+
+    const sortBtn = <IconButton onClick={sort} color='warning'> <Iconify icon='charm:grab-horizontal' /></IconButton>
     return (
         <div className='row pd-1'>
-            {ytId && <div style={styles.card} >
-                <YouTube opts={ytPlayerConfig} videoId={ytId.key} /> <div style={styles.overlay}>
-                    <IconButton color='error' onClick={() => setYtId(null)}>
-                        <Iconify icon='eva:close-square-fill' width={35} height={35} />
-                    </IconButton></div>
-            </div>}
-            <h2 className='pd-1'>{props.title}</h2>
-            <div className='posters'>
+            <h2 className='pd-1'>{props.title} {sortBtn}</h2>
+            <div className='posters' onMouseEnter={scrollHoriz} ref={elRef}>
                 {items.map((data) => {
                     if (props.curl) {
                         return (
-                            <div key={data.id}>
+                            <div key={data.id} className='poster-card'>
+                                <div className="dark-fade-top"></div>
                                 <img key={data.id} onClick={() => { trailerHandler(data.id); handleStore(data); }}
-                                    className={props.small ? 'poster-small'
-                                        : 'poster'} src={defImage} alt={data.title}
+                                    className={props.small ? 'poster-small poster-card'
+                                        : 'poster poster-card'} src={defImage} alt={data.title}
                                     srcSet={`${data.image.url ? data.image.url : defImage}`} />
+                                <div className="dark-fade-bottom"></div>
                             </div>
                         )
                     } else {
                         return (
-                            <div key={data.id} className='background'>
+                            <div key={data.id} className='background poster-card'>
                                 {/* iconoir:favourite-book */}
                                 <div className='overlayPoster'>
                                     <Tooltip title='Add to Wishlist'>
@@ -294,8 +331,8 @@ function RowPost(props) {
                                         </IconButton>
                                     </Tooltip></div>
                                 <img key={data.id} onClick={() => { trailerHandler(data.id); handleStore(data) }}
-                                    className={props.small ? 'poster-small'
-                                        : 'poster'} src={defImage} alt={data.original_name}
+                                    className={props.small ? 'poster-small poster-card'
+                                        : 'poster poster-card'} src={defImage} alt={data.original_name}
                                     srcSet={`${data.poster_path ? w500 + data.poster_path : defImage}`} />
                             </div>
                         )

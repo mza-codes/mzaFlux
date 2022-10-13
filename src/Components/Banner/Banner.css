@@ -69,6 +69,7 @@
     overflow-x: hidden;
     overflow-wrap: break-word;
     /* word-wrap: break-word; */
+    text-shadow: -3px -4px 13px black;
 }
 
 .fade_bottom {
