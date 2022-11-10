@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter } from "react-router-dom";
 import App, { Data } from "./App";
 import Router from "./router";
-
 
 export default function Home() {
     const [data, setData] = useState([])
@@ -15,10 +14,7 @@ export default function Home() {
     function fetchRecents() {
         const values = JSON.parse(sessionStorage.getItem('recents'))
         setData(values)
-    }
-
-    const block = () => {
-    }
+    };
 
     useEffect(() => {
         fetchRecents()
@@ -31,7 +27,6 @@ export default function Home() {
 
     return (
         <Data.Provider value={{ data, setData }} >
-
             <BrowserRouter>
                 <Router >
                     <div className="App">

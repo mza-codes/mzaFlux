@@ -48,7 +48,10 @@ export default function SignUp({ value }) {
     const handleUpdate = async (values, actions) => {
         console.log('Updating User Data')
         console.log(values)
-        await axios.post(`${BACKEND_URL}/register`, values)
+        const old = `${BACKEND_URL}/register`;
+        const newURL = `${BACKEND_URL}/mFlux/auth/register`;
+        
+        await axios.post(newURL, values)
             .then((response) => {
                 console.log('FETCHED RESPONSE :', response);
                 console.log('USER sTATUS :', response.data);
@@ -57,7 +60,7 @@ export default function SignUp({ value }) {
                     setComplete(true)
                     setUpdated(true)
                     // setUser(response.data.user)
-                    sessionStorage.setItem('userSession', JSON.stringify(response.data.user))
+                    sessionStorage.setItem('userSession', JSON.stringify(response.data.data))
                     setTimeout(() => {
                         setComplete(false)
                         setOpen(false)
@@ -68,8 +71,10 @@ export default function SignUp({ value }) {
                 } else if (!response.data.success) {
                     setErr('Error Occured')
                     console.log('ERROR ie success=false');
+                }else {
+                    setErr(response.data.error)
                 }
-            }).catch((err) => console.log(err))
+            }).catch((err) => {console.log(err);console.log('ERR CC');setErr(err?.response?.data?.error)})
 
     }
     return (

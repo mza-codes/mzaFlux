@@ -36,14 +36,13 @@ export default function Login({ value }) {
         password: Yup.string().min(6, 'Minimum 6 Characters Required').max(15, 'Max 12 Characters').required('Required Field')
             .required('Required Field'),
     })
-
-    // useEffect(() => {
-    //   console.log('useEff cld hr');
-    // }, [])
+    
     const handleLogin = async (values, actions) => {
-        console.log('Updating User Data')
+        console.log('handle login User ')
         console.log(values)
-        await axios.post(`${BACKEND_URL}/login`, values)
+        const old = `${BACKEND_URL}/login`;
+        const newURL = `${BACKEND_URL}/mFlux/auth/login`;
+        await axios.post(newURL, values)
             .then((response) => {
                 console.log('FETCHED RESPONSE :', response);
                 console.log('USER sTATUS :', response.data);
@@ -52,7 +51,7 @@ export default function Login({ value }) {
                     setComplete(true)
                     setUpdated(true)
                     // setUser(response.data.user)
-                    sessionStorage.setItem('userSession', JSON.stringify(response.data.user))
+                    sessionStorage.setItem('userSession', JSON.stringify(response.data.data))
                     setTimeout(() => {
                         setComplete(false)
                         setOpen(false)
