@@ -3,7 +3,7 @@ import './RowPost.css'
 import axios from 'axios'
 import defImage from './default-poster.jpg';
 import { trending } from '../../url'
-import { API_KEY, IMDB_API_KEY, POSTER_URL, TMDB_URL, w500 } from '../../Constants/Constants'
+import { API_KEY, BACKEND_URL, IMDB_API_KEY, POSTER_URL, TMDB_URL, w500 } from '../../Constants/Constants'
 import YouTube from 'react-youtube';
 import { IconButton, Tooltip, Typography } from '@mui/material';
 import Iconify from '../../Hooks/Iconify';
@@ -28,6 +28,7 @@ const styles = {
         right: '-14px'
     },
 }
+
 function MoviePost(props) {
     // var data = []
     const route = useNavigate()
@@ -42,9 +43,9 @@ function MoviePost(props) {
     const isMd = useResponsive('down', 'md')
     const isDesktop = useResponsive('up', 'lg')
     const { data, setData } = useContext(Data)
+    const user = JSON.parse(sessionStorage.getItem('userSession'))
     let query = 'thriller'
     const runSearch = () => {
-
         console.log('fnc MOVIE POST LOGging PROPS')
         console.log(props);
         // --------------- TMDB REQUEST -----------------------
@@ -78,6 +79,12 @@ function MoviePost(props) {
         //     console.log(error);
         // });
         // ---------------- IMDB REQUEST END------------------
+    }
+
+    const addToWishList = async (item) => {
+        console.log('ADD TO WISHLIST CALLED', item);
+        await axios.post(`${BACKEND_URL}/mflux/wishlist/add`, item).then((response) => { console.log('fetched Response', response); })
+        console.log('REQ Complete');
     }
 
     const handleStore = async (value) => {
@@ -168,11 +175,12 @@ function MoviePost(props) {
                             return (
                                 <div key={data.id} className='background poster-card'>
                                     <div className='overlayPoster'>
-                                        <Tooltip title='Add to Wishlist'>
-                                            <IconButton>
+                                        {user && <Tooltip title='Add to Wishlist'>
+                                            <IconButton onClick={() => addToWishList(data)}>
                                                 <Iconify sx={{ color: 'white' }} icon='emojione:star' width={26} height={26} />
                                             </IconButton>
-                                        </Tooltip></div>
+                                        </Tooltip>}
+                                    </div>
                                     <img onClick={() => { trailerHandler(data.id); handleStore(data); }}
                                         className={props.small ? 'poster-small poster-card' : 'poster poster-card'}
                                         src={defImage} alt={data.original_title}
@@ -218,8 +226,10 @@ function MoviePost(props) {
 function RowPost(props) {
     const [items, setItem] = useState([])
     const [ytId, setYtId] = useState('')
+    const [errIcon, setErrIcon] = useState(false)
     const { data, setData } = useContext(Data)
     const elRef = useRef();
+    const user = JSON.parse(sessionStorage.getItem('userSession'))
     const route = useNavigate()
     const handleStore = async (value) => {
         console.log('HANDLESTORE CALLED')
@@ -253,10 +263,43 @@ function RowPost(props) {
         }
     }
 
+    const addToWishList = async (item) => {
+        if (!user) return false;
+        console.log('ADD TO WISHLIST CALLED', item);
+        item.userId = user?._id
+        const values = {
+            title: /[a-zA-Z]/.test(item?.original_title) ? item?.original_title : item?.title || item?.original_name,
+            country: item?.origin_country?.length >= 1 ? item?.origin_country[0] : item?.original_language,
+            background: item?.backdrop_path || item?.poster_path,
+            tmdbId: item?.id,
+            poster: item?.poster_path || item?.backdrop_path,
+            language: item?.original_language,
+            popularity: item?.popularity,
+            rating: item?.vote_average,
+            vote_count: item?.vote_count,
+            year: parseInt(item?.release_date?.slice(0, 4)) || parseInt(item?.first_air_date?.slice(0, 4)),
+            userId: item?.userId,
+            genres: item?.genre_ids,
+            plot: item?.overview,
+        };
+
+        await axios.post(`${BACKEND_URL}/mflux/wishlist/add`, values).then((response) => {
+            console.log('fetched Response', response);
+        }).catch((err) => {
+            console.log('ERROR WISHLIST', err);
+            const icon = document.getElementById(item.id);
+            console.log(icon);
+            icon.style.visibility = "hidden";
+            // do alert here to info user about duplicate
+        });
+
+        console.log('REQ Complete');
+    }
+
     useEffect(() => {
         fetchRow()
-        const imgs = document.querySelector('img');
-        const observer = lozad(imgs); 
+        const imgs = document.querySelectorAll('img');
+        const observer = lozad(imgs);
         // passing a `NodeList` (e.g. `document.querySelectorAll()`) is also valid
         observer.observe();
     }, [])
@@ -325,11 +368,13 @@ function RowPost(props) {
                             <div key={data.id} className='background poster-card'>
                                 {/* iconoir:favourite-book */}
                                 <div className='overlayPoster'>
-                                    <Tooltip title='Add to Wishlist'>
-                                        <IconButton>
-                                            <Iconify sx={{ color: 'white' }} icon='emojione:star' width={26} height={26} />
+                                    {user && <Tooltip title='Add to Wishlist'>
+                                        <IconButton id={data.id} onClick={() => addToWishList(data)}>
+                                            <Iconify width={26} height={26}
+                                                icon='emojione:star' />
                                         </IconButton>
-                                    </Tooltip></div>
+                                    </Tooltip>}
+                                </div>
                                 <img key={data.id} onClick={() => { trailerHandler(data.id); handleStore(data) }}
                                     className={props.small ? 'poster-small poster-card'
                                         : 'poster poster-card'} src={defImage} alt={data.original_name}
