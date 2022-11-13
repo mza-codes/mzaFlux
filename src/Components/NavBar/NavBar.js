@@ -117,16 +117,16 @@ function NavBar() {
         } else {
             disableLogo(false)
         }
-    }, [])
+    }, []);
 
 
     const nav = () => {
         if (window.location.pathname === "/") {
             window.scroll(0, 0)
         } else {
-            route('/', { replace: true })
-        }
-    }
+            route('/');
+        };
+    };
 
     return (
         <>

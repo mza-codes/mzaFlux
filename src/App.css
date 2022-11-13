@@ -50,7 +50,7 @@ body::-webkit-scrollbar {
     /* scale: 1.5; */
 }
 
-.shadow{
+.shadow {
     text-shadow: -6px 5px 7px black;
 }
 
@@ -113,14 +113,7 @@ body::-webkit-scrollbar {
     /* height: 38rem; */
     position: relative;
     /* color: white; */
-    
-}
 
-.bg0{
-    /* background-color: ; */
-    /* -webkit-filter: brightness(0.5);
-    filter: brightness(0.5); */
-    
 }
 
 .pad {
@@ -177,6 +170,17 @@ body::-webkit-scrollbar {
     src: url('/public/fonts/Wallington-Regular.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
+}
+
+/* NotoSans-Regular.ttf  */
+
+@font-face {
+    font-family: 'notosans';
+    src: url('/public/fonts/NotoSans-Regular.ttf') format('truetype');
+}
+
+.notosans {
+    font-family: 'notosans', 'serif' !important;
 }
 
 .errorText {
