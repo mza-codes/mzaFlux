@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="#"><img src="https://i.ibb.co/V30KnKC/apple-touch-icon-Copy.png" width="60" alt="_logo" border="0"></a>
+  <a href="#"><img src="https://github.com/mza-codes/mzaFlux/blob/a65bee3602d25a6f41957f7cf1f60e7784798821/src/Components/NavBar/mflux-red.png" width="160" alt="_logo" border="0"></a>
   <br />
   <h3 align="center">mFlux</h3>
 
