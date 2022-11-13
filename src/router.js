@@ -1,15 +1,11 @@
-import { useContext } from "react";
 import { useRoutes } from "react-router-dom";
-import App, { UserSession } from "./App";
-import LoginPage from "./Components/Login";
+import App from "./App";
 import Recent from "./Components/Recent";
 import WishList from "./Components/Wishlist";
 import Account from "./Pages/Account";
 import SingleView from "./Pages/SingleView";
 
 export default function Router() {
-
-    // const { user } = useContext(UserSession)
 
     return useRoutes([
         { path: '/', element: <App /> },
@@ -18,8 +14,6 @@ export default function Router() {
         { path: 'account', element: <Account /> },
         { path: 'view', element: <SingleView /> },
         { path: '/*', element: <WishList /> },
-
-
 
         // {
         //     path: '/',
