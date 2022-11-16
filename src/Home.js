@@ -9,21 +9,23 @@ export default function Home() {
     const fetchUser = () => {
         const data = JSON.parse(sessionStorage.getItem('userSession'))
         console.log(data)
-    }
-    sessionStorage.setItem('recents', JSON.stringify(data))
+    };
+
+    sessionStorage.setItem('recents', JSON.stringify(data));
+
     function fetchRecents() {
         const values = JSON.parse(sessionStorage.getItem('recents'))
         setData(values)
     };
 
     useEffect(() => {
-        fetchRecents()
-        fetchUser()
+        fetchRecents();
+        fetchUser();
         window.onbeforeunload = () => {
             sessionStorage.setItem('recents', JSON.stringify(data))
             return "Your Session Will be Lost";
         };
-    }, [])
+    }, []); 
 
     return (
         <Data.Provider value={{ data, setData }} >
