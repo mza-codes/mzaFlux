@@ -71,10 +71,21 @@
 }
 
 .search{
-    /* height: 23px; */
     margin: 3px;
-    padding: 8px;
-    border-radius: 29px;
+    padding: 10px 14px;
+    background: rgba(245, 222, 179, 0.184);
+    border-radius: 5px 5px 0px 0px;
+    outline: none;
+    border: none;
+    border-bottom: 2px solid wheat;
+    font-size: large;
+    color: #fff;
+}
+
+.search::placeholder{
+    /* font-weight: 600; */
+    color: rgba(240, 248, 255, 0.469);
+    letter-spacing: 0px !important;
 }
 
 .avatar-small{
@@ -86,9 +97,11 @@
 .small-profile{
     border: 1px solid white;
     border-radius: 3px;
-    /* position: relative; */
-    /* max-width: 2em; */
-    /* max-height: ; */
 }
 
+.searchBg{
+    background: #0000009e;
+    padding: 8px;
+    border-radius: 0 !important;
+}
 

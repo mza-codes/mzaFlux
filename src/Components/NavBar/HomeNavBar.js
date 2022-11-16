@@ -59,14 +59,12 @@ function HomeNavBar() {
     return (
         <div >
             <div className="navbar" >
-                {/* <img src={logoRed} alt="" className="logo" onClick={nav} /> */}
                 <Box className='pointer' onClick={nav} component="img"
                     sx={{
                         height: { xs: '2rem', sm: '2.5rem', lg: '3rem', xl: '3.5rem' },
                         width: { xs: '5rem', sm: '7rem', lg: '9rem', xl: '10rem' }
                     }}
                     alt="mFlux_Logo" src={logoRed} />
-                {/* <img onClick={(e)=> setAnchorEl2(e.currentTarget)} src={logoBlue} alt="" className="logo pointer" /> */}
                 <img onClick={(e) => setAnchorEl2(e.currentTarget)} alt="" className="avatar pointer"
                     src={user && user.photoURL ? user.photoURL : defaultAvatar} >
                 </img><BasicPopover value={[anchorEl2, setAnchorEl2, setOpenPopover, setLoginPopOver]} />
@@ -88,15 +86,22 @@ function HomeNavBar() {
                                     vertical: 'bottom',
                                     horizontal: 'left',
                                 }}>
-                                <input className='search' value={query} onChange={(e) => { doQuery(e.target.value) }} type="text" />
-                                <IconButton color='warning' onClick={() => { setParams(query); setResult(true) }} >
-                                    <Iconify icon='fluent:search-square-24-filled' width={34} height={34} /> </IconButton>
+                                <div className="searchBg">
+                                    <input maxLength={50} className='notosans search' value={query} placeholder='Search a Movie..'
+                                        onChange={(e) => { doQuery(e.target.value) }} type="text" />
+                                    <IconButton color='warning' onClick={() => { setParams(query); setResult(true) }} >
+                                        <Iconify icon='fluent:search-square-24-filled' width={34} height={34} />
+                                    </IconButton>
+                                </div>
                             </Popover>
                         </div></>}
-                        {!isMobile && <><input className='search' placeholder='Enter Movie Name' value={query}
+                        {!isMobile && <> <input maxLength={50} className='notosans search'
+                            placeholder='Search a Title..' value={query}
                             onChange={(e) => { doQuery(e.target.value) }} type="text" />
                             <IconButton color='warning' onClick={() => { setParams(query); setResult(true) }} >
-                                <Iconify icon='fluent:search-square-24-filled' width={34} height={34} /> </IconButton> </>}
+                                <Iconify icon='fluent:search-square-24-filled' width={34} height={34} />
+                            </IconButton>
+                        </>}
                     </div>
                 </div>
             </div>
