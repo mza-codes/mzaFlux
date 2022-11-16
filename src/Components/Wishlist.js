@@ -1,8 +1,6 @@
 import { Grid, Typography } from '@mui/material'
 import { Container, Stack } from "@mui/system";
-import logoRed from './NavBar/mflux-red.png'
-// import { Alert } from "bootstrap";
-import Alert from 'react-bootstrap/Alert';
+import logoRed from './NavBar/mflux-red.png';
 import NavBar from './NavBar/NavBar';
 import { useEffect } from 'react';
 import axios from 'axios';
